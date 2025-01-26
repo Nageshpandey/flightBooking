@@ -217,7 +217,7 @@ export function FlightSearchForm({ onSearch, onAirportSearch, airports }: Flight
   }
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-4 bg-white/10 backdrop-blur-md rounded-xl shadow-2xl border border-white/20">
+    <div className="w-full max-w-4xl mx-auto p-4 bg-white/10 backdrop-blur-md rounded-xl shadow-2xl border border-white/20">
       <form onSubmit={handleSubmit}>
         {(errors.general?.length > 0 || Object.keys(errors).length > 0) && (
           <Alert variant="destructive" className="mb-4">
@@ -229,7 +229,7 @@ export function FlightSearchForm({ onSearch, onAirportSearch, airports }: Flight
           </Alert>
         )}
 
-        <div className="flex items-center gap-4 mb-4">
+        <div className="flex flex-wrap items-center gap-2 mb-4">
           <Button
             variant={tripType === "return" ? "default" : "ghost"}
             className={cn("text-sm font-medium", tripType === "return" && "bg-blue-600 text-white hover:bg-blue-700")}
@@ -443,8 +443,8 @@ export function FlightSearchForm({ onSearch, onAirportSearch, airports }: Flight
             </div>
           </div>
         ) : (
-          <div className="flex items-center gap-2">
-            <div className="flex-1 relative">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="relative">
               <div className="absolute left-3 top-1/2 -translate-y-1/2">
                 <MapPin className="h-5 w-5 text-gray-500" />
               </div>
@@ -468,10 +468,7 @@ export function FlightSearchForm({ onSearch, onAirportSearch, airports }: Flight
                 ))}
               </datalist>
             </div>
-            <Button variant="ghost" size="icon" className="rounded-full" onClick={swapLocations} type="button">
-              <SwapHorizontal className="h-5 w-5" />
-            </Button>
-            <div className="flex-1 relative">
+            <div className="relative">
               <div className="absolute left-3 top-1/2 -translate-y-1/2">
                 <MapPin className="h-5 w-5 text-gray-500" />
               </div>
@@ -495,128 +492,133 @@ export function FlightSearchForm({ onSearch, onAirportSearch, airports }: Flight
                 ))}
               </datalist>
             </div>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className={cn(
-                    "w-[300px] justify-start text-left font-normal border-2",
-                    (errors.departureDate || errors.returnDate) && "border-red-500",
-                  )}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {departureDate && returnDate && tripType === "return" ? (
-                    <>
-                      {format(departureDate, "d MMM")} - {format(returnDate, "d MMM")}
-                    </>
-                  ) : departureDate ? (
-                    format(departureDate, "d MMM")
-                  ) : (
-                    "Select dates"
-                  )}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  initialFocus
-                  mode={tripType === "return" ? "range" : "single"}
-                  selected={tripType === "return" ? { from: departureDate, to: returnDate } : departureDate}
-                  onSelect={
-                    tripType === "return"
-                      ? (range) => {
-                          setDepartureDate(range?.from)
-                          setReturnDate(range?.to)
-                          if (errors.departureDate) setErrors((prev) => ({ ...prev, departureDate: undefined }))
-                          if (errors.returnDate) setErrors((prev) => ({ ...prev, returnDate: undefined }))
-                        }
-                      : (date) => {
-                          setDepartureDate(date)
-                          if (errors.departureDate) setErrors((prev) => ({ ...prev, departureDate: undefined }))
-                        }
-                  }
-                  numberOfMonths={2}
-                />
-              </PopoverContent>
-            </Popover>
-            <Popover open={showTravelers} onOpenChange={setShowTravelers}>
-              <PopoverTrigger asChild>
-                <Button variant="outline" className="w-[200px] justify-start text-left font-normal border-2">
-                  <User className="mr-2 h-4 w-4" />
-                  {adults + children} {adults + children === 1 ? "traveller" : "travellers"}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-80">
-                <div className="grid gap-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="font-medium">Adults</div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="h-8 w-8 rounded-full"
-                        onClick={() => setAdults(Math.max(1, adults - 1))}
-                        disabled={adults <= 1}
-                        type="button"
-                      >
-                        <Minus className="h-4 w-4" />
-                      </Button>
-                      <span className="w-8 text-center">{adults}</span>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="h-8 w-8 rounded-full"
-                        onClick={() => setAdults(adults + 1)}
-                        type="button"
-                      >
-                        <Plus className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="font-medium">Children</div>
-                      <div className="text-sm text-gray-500">Ages 2 to 17</div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="h-8 w-8 rounded-full"
-                        onClick={() => setChildren(Math.max(0, children - 1))}
-                        disabled={children <= 0}
-                        type="button"
-                      >
-                        <Minus className="h-4 w-4" />
-                      </Button>
-                      <span className="w-8 text-center">{children}</span>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="h-8 w-8 rounded-full"
-                        onClick={() => setChildren(children + 1)}
-                        type="button"
-                      >
-                        <Plus className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
+            <div className="sm:col-span-2">
+              <Popover>
+                <PopoverTrigger asChild>
                   <Button
-                    className="w-full bg-blue-600 text-white hover:bg-blue-700"
-                    onClick={() => setShowTravelers(false)}
-                    type="button"
+                    variant="outline"
+                    className={cn(
+                      "w-[300px] justify-start text-left font-normal border-2",
+                      (errors.departureDate || errors.returnDate) && "border-red-500",
+                    )}
                   >
-                    Done
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {departureDate && returnDate && tripType === "return" ? (
+                      <>
+                        {format(departureDate, "d MMM")} - {format(returnDate, "d MMM")}
+                      </>
+                    ) : departureDate ? (
+                      format(departureDate, "d MMM")
+                    ) : (
+                      "Select dates"
+                    )}
                   </Button>
-                </div>
-              </PopoverContent>
-            </Popover>
-            <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
-              Search
-            </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    initialFocus
+                    mode={tripType === "return" ? "range" : "single"}
+                    selected={tripType === "return" ? { from: departureDate, to: returnDate } : departureDate}
+                    onSelect={
+                      tripType === "return"
+                        ? (range) => {
+                            setDepartureDate(range?.from)
+                            setReturnDate(range?.to)
+                            if (errors.departureDate) setErrors((prev) => ({ ...prev, departureDate: undefined }))
+                            if (errors.returnDate) setErrors((prev) => ({ ...prev, returnDate: undefined }))
+                          }
+                        : (date) => {
+                            setDepartureDate(date)
+                            if (errors.departureDate) setErrors((prev) => ({ ...prev, departureDate: undefined }))
+                          }
+                    }
+                    numberOfMonths={2}
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
           </div>
         )}
+
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mt-4">
+          <Popover open={showTravelers} onOpenChange={setShowTravelers}>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="w-[200px] justify-start text-left font-normal border-2">
+                <User className="mr-2 h-4 w-4" />
+                {adults + children} {adults + children === 1 ? "traveller" : "travellers"}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80">
+              <div className="grid gap-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="font-medium">Adults</div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="h-8 w-8 rounded-full"
+                      onClick={() => setAdults(Math.max(1, adults - 1))}
+                      disabled={adults <= 1}
+                      type="button"
+                    >
+                      <Minus className="h-4 w-4" />
+                    </Button>
+                    <span className="w-8 text-center">{adults}</span>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="h-8 w-8 rounded-full"
+                      onClick={() => setAdults(adults + 1)}
+                      type="button"
+                    >
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="font-medium">Children</div>
+                    <div className="text-sm text-gray-500">Ages 2 to 17</div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="h-8 w-8 rounded-full"
+                      onClick={() => setChildren(Math.max(0, children - 1))}
+                      disabled={children <= 0}
+                      type="button"
+                    >
+                      <Minus className="h-4 w-4" />
+                    </Button>
+                    <span className="w-8 text-center">{children}</span>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="h-8 w-8 rounded-full"
+                      onClick={() => setChildren(children + 1)}
+                      type="button"
+                    >
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+                <Button
+                  className="w-full bg-blue-600 text-white hover:bg-blue-700"
+                  onClick={() => setShowTravelers(false)}
+                  type="button"
+                >
+                  Done
+                </Button>
+              </div>
+            </PopoverContent>
+          </Popover>
+          <Button type="submit" className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto">
+            Search
+          </Button>
+        </div>
 
         <div className="flex items-center gap-6 mt-4">
           <div className="flex items-center space-x-2">

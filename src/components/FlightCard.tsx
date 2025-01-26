@@ -65,59 +65,60 @@ export const FlightCard = ({ flight, carriers, isReturn = false, onClick }: Flig
   }
 
   return (
-    <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer" onClick={onClick}>
-      <div className="flex items-start justify-between gap-6">
-        <div className="flex items-start gap-6 flex-1">
+    <Card className="p-3 sm:p-4 hover:shadow-lg transition-shadow cursor-pointer" onClick={onClick}>
+      <div className="flex flex-col gap-3 sm:gap-4">
+        <div className="flex items-start justify-between gap-2 sm:gap-4">
           {/* Airline Info */}
-          <div className="flex flex-col items-center gap-2 min-w-[100px]">
-            <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
-              <Plane className="w-6 h-6 text-gray-600" />
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-100 rounded-full flex items-center justify-center">
+              <Plane className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
             </div>
-            <div className="text-sm font-medium text-center">
+            <div className="text-xs sm:text-sm font-medium">
               {validatingAirlineCodes.map((code) => carriers[code] || code).join(", ")}
             </div>
           </div>
 
-          {/* Flight Details */}
-          <div className="flex-1 grid grid-cols-[1fr_auto_1fr] items-center gap-4">
-            {/* Departure */}
-            <div>
-              <div className="text-2xl font-bold">{formatTime(departureSegment.departure.at)}</div>
-              <div className="text-sm text-gray-600">{departureSegment.departure.iataCode}</div>
-              <div className="text-sm text-gray-500">{formatDate(departureSegment.departure.at)}</div>
-            </div>
-
-            {/* Duration & Stops */}
-            <div className="flex flex-col items-center gap-2">
-              <div className="text-sm text-gray-600 flex items-center gap-1">
-                <Clock className="w-4 h-4" />
-                {formatDuration(totalDuration)}
-              </div>
-              <div className="w-32 h-[2px] bg-gray-300 relative">
-                <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full border-2 border-gray-300 bg-white"></div>
-              </div>
-              <div className="text-xs text-gray-500">
-                {itineraries[0].segments.length > 1
-                  ? `${itineraries[0].segments.length - 1} stop${itineraries[0].segments.length > 2 ? "s" : ""}`
-                  : "Direct"}
-              </div>
-            </div>
-
-            {/* Arrival */}
-            <div className="text-right">
-              <div className="text-2xl font-bold">{formatTime(arrivalSegment.arrival.at)}</div>
-              <div className="text-sm text-gray-600">{arrivalSegment.arrival.iataCode}</div>
-              <div className="text-sm text-gray-500">{formatDate(arrivalSegment.arrival.at)}</div>
-            </div>
+          {/* Price */}
+          <div className="flex flex-col items-end">
+            <div className="text-lg sm:text-xl font-bold text-blue-600">{formattedPrice}</div>
+            <div className="text-xs sm:text-sm text-gray-500">per traveller</div>
           </div>
         </div>
 
-        {/* Price */}
-        <div className="flex flex-col items-end gap-1">
-          <div className="text-2xl font-bold text-blue-600">{formattedPrice}</div>
-          <div className="text-sm text-gray-500">per traveller</div>
+        {/* Flight Details */}
+        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 sm:gap-4">
+          {/* Departure */}
+          <div>
+            <div className="text-base sm:text-lg font-bold">{formatTime(departureSegment.departure.at)}</div>
+            <div className="text-xs sm:text-sm text-gray-600">{departureSegment.departure.iataCode}</div>
+            <div className="text-xs sm:text-sm text-gray-500">{formatDate(departureSegment.departure.at)}</div>
+          </div>
+
+          {/* Duration & Stops */}
+          <div className="flex flex-col items-center gap-1 sm:gap-2">
+            <div className="text-xs sm:text-sm text-gray-600 flex items-center gap-1">
+              <Clock className="w-3 h-3 sm:w-4 sm:h-4" />
+              {formatDuration(totalDuration)}
+            </div>
+            <div className="w-20 sm:w-32 h-[2px] bg-gray-300 relative">
+              <div className="absolute -top-1 sm:-top-2 left-1/2 -translate-x-1/2 w-2 h-2 sm:w-4 sm:h-4 rounded-full border-2 border-gray-300 bg-white"></div>
+            </div>
+            <div className="text-[10px] sm:text-xs text-gray-500">
+              {itineraries[0].segments.length > 1
+                ? `${itineraries[0].segments.length - 1} stop${itineraries[0].segments.length > 2 ? "s" : ""}`
+                : "Direct"}
+            </div>
+          </div>
+
+          {/* Arrival */}
+          <div className="text-right">
+            <div className="text-base sm:text-lg font-bold">{formatTime(arrivalSegment.arrival.at)}</div>
+            <div className="text-xs sm:text-sm text-gray-600">{arrivalSegment.arrival.iataCode}</div>
+            <div className="text-xs sm:text-sm text-gray-500">{formatDate(arrivalSegment.arrival.at)}</div>
+          </div>
         </div>
       </div>
     </Card>
   )
 }
+
